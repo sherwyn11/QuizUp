@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="match_parent"
+    tools:context=".EnterCodeActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold
+"
+        android:id="@+id/rules"
+        android:text="RULES:" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="120dp"
+        android:layout_below="@id/rules"
+        android:id="@+id/rulestext1"
+        android:text="1. There are 20 questions" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/rulestext1"
+        android:id="@+id/rulestext2"
+        android:text="2. You have 30 seconds to solve each question" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/rulestext2"
+        android:id="@+id/rulestext3"
+        android:text="3. Each correct answer is awarded +4 marks" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/rulestext3"
+        android:id="@+id/rulestext4"
+        android:text="4. Each wrong answer is given -1 mark" />
+
+    <Button
+        android:id="@+id/enterquiz"
+        android:background="@drawable/mybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="50dp"
+        android:text="NEXT"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
