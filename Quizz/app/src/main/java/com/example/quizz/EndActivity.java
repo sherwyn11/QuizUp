@@ -29,6 +29,7 @@ public class EndActivity extends AppCompatActivity {
 
     private String Roll_no;
     private String score;
+    private String quiz_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class EndActivity extends AppCompatActivity {
         Intent intent = getIntent();
         score =intent.getStringExtra("score");
         Roll_no = intent.getStringExtra("Roll_no");
+        quiz_name = intent.getStringExtra("quiz_name");
 
         Log.d("ROOLLLL",Roll_no);
 
@@ -60,8 +62,9 @@ public class EndActivity extends AppCompatActivity {
     }
 
     private void saveScore(){
-        final String roll = Roll_no;
+        final String roll = SharedPrefManager.getInstance(getApplicationContext()).getRollNo();
         final String scr = score;
+        final String quizName = quiz_name;
 
         progressDialog.show();
         StringRequest stringRequest = new StringRequest(
@@ -96,6 +99,7 @@ public class EndActivity extends AppCompatActivity {
                 Map<String,String> params = new HashMap<>();
                 params.put("roll_no",roll);
                 params.put("score",scr);
+                params.put("quiz_name", quizName);
                 return params;
             }
         };

@@ -1,5 +1,6 @@
 package com.example.quizz;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
@@ -9,11 +10,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.*;
 
 import java.io.InputStream;
@@ -24,14 +37,14 @@ import jxl.Sheet;
 import jxl.Workbook;
 
 public class QuizMainActivity extends AppCompatActivity {
-    private static final long COUNT_DOWN_MILLIS=30000;
+    private static final long COUNT_DOWN_MILLIS = 30000;
     private TextView textViewQuestion;
-    int count=0;
-    int x=0;
-    int flag=0;
-    String answer="";
-    int score=0;
-    int arr[]=new int[10];
+    int count = 0;
+    int x = 0;
+    int flag = 0;
+    String answer = "";
+    int score = 0;
+    int arr[] = new int[10];
     ArrayList<Integer> number = new ArrayList<Integer>();
     private TextView textViewScore;
     private TextView textViewQuestionCount;
@@ -44,6 +57,7 @@ public class QuizMainActivity extends AppCompatActivity {
     private Button buttonConfirmnext;
     private String Roll_no;
     private TextView ansDisp;
+    private String quiz_name;
     // List<Question> questionList=new ArrayList<>();
     private ColorStateList textColorDefaultCd;
     private ColorStateList radio1ColorDefaultCd;
@@ -53,22 +67,25 @@ public class QuizMainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeleftinmillis;
 
+    ArrayList<String> questions = new ArrayList<>();
+    ArrayList<String> optA = new ArrayList<>();
+    ArrayList<String> optB = new ArrayList<>();
+    ArrayList<String> optC = new ArrayList<>();
+    ArrayList<String> optD = new ArrayList<>();
+    ArrayList<String> ans = new ArrayList<>();
+    ArrayList<String> reason = new ArrayList<>();
 
+    ProgressDialog progressDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        arr[0]=0;
-        for(int i=1;i<=9;i++) {
-            arr[i] = 0;
-            number.add(i);
-        }
+        setContentView(R.layout.activity_quiz_main);
 
         Intent intent = getIntent();
         Roll_no = intent.getStringExtra("Roll_no");
-
-        setContentView(R.layout.activity_quiz_main);
-        Collections.shuffle(number);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
         textViewQuestion = findViewById(R.id.text_view_question);
         textViewScore = findViewById(R.id.text_view_score);
         textViewQuestionCount = findViewById(R.id.text_view_qno);
@@ -78,35 +95,35 @@ public class QuizMainActivity extends AppCompatActivity {
         rb2 = findViewById(R.id.radio_button2);
         rb3 = findViewById(R.id.radio_button3);
         rb4 = findViewById(R.id.radio_button4);
-        ansDisp=findViewById(R.id.answer_text);
+        ansDisp = findViewById(R.id.answer_text);
         buttonConfirmnext = findViewById(R.id.button_submit_next);
-        textColorDefaultCd=textViewCountDown.getTextColors();
-        radio1ColorDefaultCd=rb1.getTextColors();
-        radio2ColorDefaultCd=rb2.getTextColors();
-        radio3ColorDefaultCd=rb3.getTextColors();
-        radio4ColorDefaultCd=rb4.getTextColors();
-        Question();
+        textColorDefaultCd = textViewCountDown.getTextColors();
+        radio1ColorDefaultCd = rb1.getTextColors();
+        radio2ColorDefaultCd = rb2.getTextColors();
+        radio3ColorDefaultCd = rb3.getTextColors();
+        radio4ColorDefaultCd = rb4.getTextColors();
 
-        buttonConfirmnext.setOnClickListener(new View.OnClickListener(){
+
+        getQuestions();
+
+        buttonConfirmnext.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
 
-                if(flag==0) {
+                if (flag == 0) {
                     countDownTimer.cancel();
                     if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked() || rb4.isChecked()) {
                         buttonConfirmnext.setText("NEXT");
-                        flag=1;
+                        flag = 1;
                         checkAnswer(answer);
 
                     } else
                         Toast.makeText(QuizMainActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
 
-                }
-                else{
-                    if ((count + 1) < 10) {
-                        flag=0;
-                        Question();
+                } else {
+                    if (count <= 9) {
+                        flag = 0;
+                        Question(count);
                     } else {
                         endQuiz();
                     }
@@ -117,60 +134,95 @@ public class QuizMainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void openActivityEnd() {
-        Intent intent= new Intent(this, EndActivity.class);
-        intent.putExtra("Roll_no",Roll_no);
-        Log.d("ROOLLLL",Roll_no);
-        intent.putExtra("score",Integer.toString(score));
+        Intent intent = new Intent(this, EndActivity.class);
+        intent.putExtra("Roll_no", SharedPrefManager.getInstance(getApplicationContext()).getRollNo());
+        intent.putExtra("score", Integer.toString(score));
+        intent.putExtra("quiz_name", quiz_name);
         startActivity(intent);
     }
 
-    protected void Question()
-    {
 
+    private void getQuestions() {
+        final String year = SharedPrefManager.getInstance(getApplicationContext()).getUserYear();
+        final String branch = SharedPrefManager.getInstance(getApplicationContext()).getUserBranch();
+
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Constants.URL_GET_QUESTIONS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            if (!jsonArray.getBoolean(1)) {
+                                quiz_name = jsonArray.getString(2);
+                                for (int i = 3; i < jsonArray.getInt(0) + 3; i++) {
+                                    JSONArray js = jsonArray.getJSONArray(i);
+                                    questions.add(js.getString(0));
+                                    optA.add(js.getString(1));
+                                    optB.add(js.getString(2));
+                                    optC.add(js.getString(3));
+                                    optD.add(js.getString(4));
+                                    ans.add(js.getString(5));
+                                    reason.add(js.getString(6));
+                                }
+                                Log.d("dataValues", questions.toString());
+                                progressDialog.dismiss();
+                                Question(0);
+                            } else {
+                                Toast.makeText(getApplicationContext(), jsonArray.getString(0), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("year", year);
+                params.put("branch", branch);
+                params.put("subject", "DWM");
+                params.put("code", "000000");
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+
+    protected void Question(int i) {
 
         rbGroup.clearCheck();
-        try {
-            ansDisp.setText("");
-            buttonConfirmnext.setText("SUBMIT");
-            rb1.setTextColor(radio1ColorDefaultCd);
-            rb2.setTextColor(radio1ColorDefaultCd);
-            rb3.setTextColor(radio1ColorDefaultCd);
-            rb4.setTextColor(radio1ColorDefaultCd);
-            count=count+1;
-            timeleftinmillis=COUNT_DOWN_MILLIS;
-            startCountdown();
-            textViewQuestionCount.setText(count+"/9");
-            int x=number.remove(0);
-            String a = "", b = "", c = "", d = "";
-            answer="";
-            AssetManager am = getAssets();// If this line gives you ERROR then try AssetManager am=getActivity().getAssets();
-            InputStream is = am.open("Excel.xls");
-            Workbook wb = Workbook.getWorkbook(is);
-            Sheet s = wb.getSheet(0);
-            Cell z = s.getCell(1, x);
-            String xx = "";
-            xx = xx + z.getContents();
-            textViewQuestion.setText(xx);
-            z = s.getCell(2, x);
-            a = a + z.getContents();
-            rb1.setText(a);
-            z = s.getCell(3, x);
-            b = b + z.getContents();
-            rb2.setText(b);
-            z = s.getCell(4, x);
-            c = c + z.getContents();
-            rb3.setText(c);
-            z = s.getCell(5, x);
-            d = d + z.getContents();
-            rb4.setText(d);
-            z = s.getCell(6, x);
-            answer = answer + z.getContents();
-
-        } catch (Exception e) {
-
-        }
-
+        timeleftinmillis=COUNT_DOWN_MILLIS;
+        startCountdown();
+        ansDisp.setText("");
+        buttonConfirmnext.setText("SUBMIT");
+        textViewQuestionCount.setText(count+1 +"/10");
+        rb1.setTextColor(radio1ColorDefaultCd);
+        rb2.setTextColor(radio1ColorDefaultCd);
+        rb3.setTextColor(radio1ColorDefaultCd);
+        rb4.setTextColor(radio1ColorDefaultCd);
+        textViewQuestion.setText(questions.get(i));
+        rb1.setText(optA.get(i));
+        rb2.setText(optB.get(i));
+        rb3.setText(optC.get(i));
+        rb4.setText(optD.get(i));
+        answer = ans.get(i);
+        count = count+1;
 
     }
 
@@ -256,8 +308,6 @@ public class QuizMainActivity extends AppCompatActivity {
 
 
     }
-
-
 
 }
 

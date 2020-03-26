@@ -33,6 +33,7 @@ public class SelectQuizActivity extends AppCompatActivity{
     ArrayList<String> subjects = new ArrayList<>();
     private Spinner spinner;
     private Button next_act;
+    private String subject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class SelectQuizActivity extends AppCompatActivity{
     }
 
     private void openNext() {
-        Intent intent= new Intent(this, CodeActivity.class);
+        Intent intent= new Intent(this, QuizMainActivity.class);
         startActivity(intent);
     }
 
@@ -85,7 +86,7 @@ public class SelectQuizActivity extends AppCompatActivity{
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                         Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
-
+                                        subject = subjects.get(position);
                                     }
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
