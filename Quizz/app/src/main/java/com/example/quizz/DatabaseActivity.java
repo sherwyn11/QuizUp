@@ -1,5 +1,6 @@
 package com.example.quizz;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,8 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private void printDatabase(){
 
+        final String quiz_name = "test";
+
         progressDialog.show();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
@@ -85,6 +88,7 @@ public class DatabaseActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
+                params.put("quiz_name", quiz_name);
                 return params;
             }
         };
@@ -98,6 +102,7 @@ public class DatabaseActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    @SuppressLint("WrongConstant")
     private void makeCards() {
 
         JSONArray obj;

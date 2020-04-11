@@ -8,6 +8,9 @@ if (isset($_POST["submit"])) {
     if (isset($_FILES["file"])) {
 
         $topic = $_POST['topic'];
+        $year = $_POST['year'];
+        $branch = $_POST['branch'];
+        $subject = $_POST['subject'];
 
         if ($_FILES["file"]["error"] > 0) {
             echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
@@ -62,7 +65,7 @@ if (isset($storagename) && $file = fopen("upload/" . $storagename, "r+")) {
             echo "<td>" . $content . "</td>";
             array_push($a, $content);
         }
-        echo($a[0]);
+        echo('here'.$a[0]);
 
         $val = $conn->query("select 1 from `$topic`");
         if($val !== FALSE)
@@ -75,8 +78,10 @@ if (isset($storagename) && $file = fopen("upload/" . $storagename, "r+")) {
             }
             print("Exists");
         }else{
-            $sql = "INSERT INTO `QSTopics` (`ID`, `Topic`) VALUES(NULL, '$topic');";
-            if ($conn->query($sql) === TRUE) {
+            $table = 'quiz_' . $year . '_' . $branch;
+            $stmt = "INSERT INTO `$table` (`quiz_id`, `quiz_name`, `subject`, `code`, `teacher_id`, `quiz_start`, `quiz_end`) VALUES(NULL, '$topic', '$subject', '000000', '1', '0', '0')";
+            // $sql = "INSERT INTO `QSTopics` (`ID`, `Topic`) VALUES(NULL, '$topic');";
+            if ($conn->query($stmt) === TRUE) {
                 echo "Successfully inserted <br>";
                 $newSql = "CREATE TABLE `$topic` (
                     `qno` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -93,7 +98,8 @@ if (isset($storagename) && $file = fopen("upload/" . $storagename, "r+")) {
                         echo "Successfully inserted <br>";
                     } else {
                         echo "Error while entering " . $conn->error . "<br>";
-                    }                } else {
+                    }                
+                } else {
                     echo "Error while entering " . $conn->error . "<br>";
                 }
             } else {

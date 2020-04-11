@@ -30,7 +30,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SelectQuizActivity"></activity>
+        <activity android:name=".WebScrapeActivity"></activity>
+        <activity android:name=".TeacherChooserActivity" />
+        <activity android:name=".QuizStartActivity" />
+        <activity android:name=".ScoresActivity" />
+        <activity android:name=".StudentChooseActivity" />
+        <activity android:name=".SelectSubjectActivity" />
+        <activity android:name=".SelectQuizActivity" />
         <activity android:name=".FirstActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

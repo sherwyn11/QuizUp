@@ -9,7 +9,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  EDIT QUESTION   "
+        android:text="  ADD QUIZ   "
         android:layout_marginTop="100dp"
         android:background="@drawable/mybutton"
         android:layout_centerHorizontal="true"

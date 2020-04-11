@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $_SESSION['year'] = $_POST['year'];
+    $_SESSION['branch'] = $_POST['branch'];
+    $_SESSION['subject'] = $_POST['subject'];
+    print_r($_SESSION);
+    header('Location: ./admin.php');
+}
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +27,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form action="savetoDB.php" method="POST" enctype="multipart/form-data">
+    <form action='select.php' method='POST'>
         <label>Select Year</label>
         <select name="year">
             <option value="1">1</option>
@@ -36,9 +53,7 @@
         </select>
         <br>
         <br>
-        <label>Topic: </label><input type="text" name="topic"><br><br>
-        <input type="file" name="file"><br><br>
-        <button type="submit" name="submit">Submit</button>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>

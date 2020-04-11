@@ -27,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="45dp"
         android:layout_marginTop="150dp"
-        android:text="Enter Username :    "
+        android:text="Enter RollNo :    "
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
 
@@ -42,7 +42,6 @@
         android:background="#DDDDDD"
         android:ems="4"
         android:layout_marginStart="25dp"
-        android:inputType="numberDecimal"
         android:textCursorDrawable="@android:color/black">
 
         <requestFocus />
@@ -70,8 +69,8 @@
         android:layout_toRightOf="@+id/textView3"
         android:background="#DDDDDD"
         android:ems="4"
+        android:inputType="number"
         android:layout_marginStart="25dp"
-        android:inputType="numberPassword"
         android:textCursorDrawable="@android:color/black">
 
         <requestFocus />

@@ -15,6 +15,7 @@ import android.os.Message;
 import android.os.StrictMode;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -87,7 +88,9 @@ public class CodeActivity extends AppCompatActivity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         Intent intent1 = getIntent();
-        final int intValue = intent1.getIntExtra("stuff",1);
+        Log.d("checkVal", String.valueOf(intent1.getIntExtra("stuff", 1)));
+        final int intValue = intent1.getIntExtra("stuff", 1);
+
 
         if(intValue==1){
             connstat.setText("STUDENT");

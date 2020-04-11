@@ -206,6 +206,9 @@ public class QuizMainActivity extends AppCompatActivity {
 
     protected void Question(int i) {
 
+        Log.d("Test", "Test3 passed");
+
+
         rbGroup.clearCheck();
         timeleftinmillis=COUNT_DOWN_MILLIS;
         startCountdown();

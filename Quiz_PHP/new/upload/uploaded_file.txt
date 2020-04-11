@@ -1,4 +1,3 @@
-qno,question,A,B,C,D,answer,reason
 1,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
 2,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
 3,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
@@ -8,4 +7,4 @@ qno,question,A,B,C,D,answer,reason
 7,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
 8,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
 9,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
-9,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+10,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No

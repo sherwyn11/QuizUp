@@ -22,14 +22,16 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity{
-    private Button button;
+    private Button button, forgotpassword;
     private EditText Rollno;
     private EditText password;
     private TextView user;
     private ProgressDialog progressDialog;
+    private Double score;
 
     private String checkuser;
     int check = 0;
@@ -41,11 +43,20 @@ public class MainActivity extends AppCompatActivity{
         Rollno= findViewById(R.id.editText1);
         password= findViewById(R.id.editText2);
         button = findViewById(R.id.enterdetails);
-        user=findViewById(R.id.textView1);
+        user=findViewById(R.id.textView2);
+
 
         Intent intent = getIntent();
         checkuser = intent.getStringExtra("check");
         Log.d("check",checkuser);
+
+        Log.d("Test", "Test1 passed");
+
+        if(checkuser.equals("0")){
+            user.setText("Enter Email :    ");
+            Rollno.setEms(7);
+//            Rollno.setInputType();
+        }
 
 
 
@@ -59,17 +70,27 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+    }
 
-
+    private void sendResetLink() {
+        //User will receive link to reset password
     }
 
     private void userLogin(){
         final String roll = Rollno.getText().toString();
         final String pswd = password.getText().toString();
+        String url;
+
+        if(checkuser.equals("0")){
+            url = Constants.URL_GET_TEACHER;
+        }else{
+            url = Constants.URL_CHECK;
+        }
+
         progressDialog.show();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_CHECK,
+                url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -77,11 +98,20 @@ public class MainActivity extends AppCompatActivity{
                         try {
                             JSONObject obj = new JSONObject(response);
                             if(!obj.getBoolean("error")){
-                                SharedPrefManager.getInstance(getApplicationContext()).userLogin(
-                                        obj.getString("roll_no"),
-                                        obj.getString("year"),
-                                        obj.getString("branch")
-                                );
+                                if(checkuser.equals("0")){
+                                    SharedPrefManager.getInstance(getApplicationContext()).teacherLogin(
+                                            obj.getString("id"),
+                                            obj.getString("email"),
+                                            obj.getString("name")
+                                    );
+                                }else{
+                                    SharedPrefManager.getInstance(getApplicationContext()).userLogin(
+                                            obj.getString("roll_no"),
+                                            obj.getString("year"),
+                                            obj.getString("branch")
+                                    );
+                                }
+
                                 Toast.makeText(getApplicationContext(),"User Login Successful",Toast.LENGTH_LONG).show();
                                 goNext();
                             }else{
@@ -103,8 +133,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
-                params.put("roll_no",roll);
-                params.put("password",pswd);
+                if (checkuser.equals("0")){
+                    params.put("email",roll);
+                    params.put("password",pswd);
+                }else{
+                    params.put("roll_no",roll);
+                    params.put("password",pswd);
+                }
                 return params;
             }
         };
@@ -120,7 +155,7 @@ public class MainActivity extends AppCompatActivity{
             startActivity(i);
 
         }else{
-            Intent i = new Intent(this,SelectQuizActivity.class);
+            Intent i = new Intent(this, StudentChooseActivity.class);
             i.putExtra("stuff",check);
             i.putExtra("roll_no",Rollno.getText().toString());
             startActivity(i);
@@ -189,5 +224,10 @@ public class MainActivity extends AppCompatActivity{
 //        }
 //
 //    }
+
+
+
+
+
 
 }

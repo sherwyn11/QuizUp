@@ -19,10 +19,10 @@ public class RulesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rules);
-
-        Intent intent = getIntent();
-        Roll_no = intent.getStringExtra("roll_no");
-        Log.d("ROll no",Roll_no);
+//
+//        Intent intent = getIntent();
+//        Roll_no = intent.getStringExtra("roll_no");
+//        Log.d("ROll no",Roll_no);
 
         buttonnext=findViewById(R.id.enterquiz);
         buttonnext.setOnClickListener(new View.OnClickListener() {

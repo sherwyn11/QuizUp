@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:id="@+id/edit_text"
+            android:hint="Enter link"
+            android:textSize="20sp"
+            android:ems="16"
+            android:layout_margin="4dp"
+            android:background="@android:color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:layout_below="@id/edit_text"
+            android:id="@+id/txt1"
+            android:textColor="@android:color/black"
+            android:layout_margin="4dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:layout_below="@id/txt1"
+            android:id="@+id/txt2"
+            android:textColor="@android:color/black"
+            android:layout_margin="4dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:layout_below="@id/txt2"
+            android:id="@+id/txt3"
+            android:textColor="@android:color/black"
+            android:layout_margin="4dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:layout_below="@id/txt3"
+            android:id="@+id/txt4"
+            android:textColor="@android:color/black"
+            android:layout_margin="4dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:layout_below="@id/txt4"
+            android:id="@+id/txt5"
+            android:textColor="@android:color/black"
+            android:layout_margin="4dp"
+            />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/btn_1"
+            android:layout_below="@id/txt1"
+            android:layout_margin="4dp"
+            android:layout_alignParentBottom="true"
+            android:text="Submit"
+            />
+
+    </RelativeLayout>
+
+</ScrollView>
+
+

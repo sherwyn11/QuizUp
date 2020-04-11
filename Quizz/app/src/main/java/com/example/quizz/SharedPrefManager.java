@@ -11,6 +11,9 @@ public class SharedPrefManager {
     private static final String YEAR = "1";
     private static final String BRANCH = "Comps";
 
+    private static final String ID = "1";
+    private static final String NAME = "test";
+    private static final String EMAIL = "test@test.com";
 
     private SharedPrefManager(Context context) {
         mCtx = context;
@@ -38,9 +41,23 @@ public class SharedPrefManager {
 
     }
 
-    public boolean isLogedIn(){
+    public boolean teacherLogin(String id, String email, String name){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(ROLL_NO,Context.MODE_PRIVATE);
-        return !sharedPreferences.getString(ROLL_NO, "null").equals("null");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(ID, id);
+        editor.putString(EMAIL, email);
+        editor.putString(NAME, name);
+
+        editor.apply();
+
+        return true;
+
+    }
+
+    public boolean isTeacher(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(EMAIL,Context.MODE_PRIVATE);
+        return !sharedPreferences.getString(EMAIL, "null").equals("null");
 //        if(!sharedPreferences.getString(ROLL_NO,"null").equals("null")){
 //            return true;
 //        }

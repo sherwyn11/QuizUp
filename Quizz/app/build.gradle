@@ -47,4 +47,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.5'
     implementation 'com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.5'
     implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.5'
+
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+
 }

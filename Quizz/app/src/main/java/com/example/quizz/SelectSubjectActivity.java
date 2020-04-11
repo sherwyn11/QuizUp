@@ -1,15 +1,12 @@
 package com.example.quizz;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,72 +18,81 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SelectQuizActivity extends AppCompatActivity{
+import androidx.appcompat.app.AppCompatActivity;
 
+public class SelectSubjectActivity extends AppCompatActivity {
+
+    private Spinner spinner, spinner1;
+    private String subject, quiz;
     ProgressDialog progressDialog;
-    ArrayList<String> subjects = new ArrayList<>();
-    private Spinner spinner;
-    private Button next_act;
-    private String subject;
+    ArrayList<String> quizzes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_quiz);
+        setContentView(R.layout.activity_select_subject);
+
+        spinner = findViewById(R.id.spinner_sub);
+        spinner1 = findViewById(R.id.spinner_1);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
-        spinner = findViewById(R.id.spinner1);
-        next_act = findViewById(R.id.next);
 
-        next_act.setOnClickListener(new View.OnClickListener() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.subjects, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                openNext();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                subject = parent.getItemAtPosition(position).toString();
+                getQuizes();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
-        getSubjects();
     }
 
-    private void openNext() {
-        Intent intent= new Intent(this, CodeActivity.class);
-        startActivity(intent);
-    }
+    private void getQuizes() {
 
-    private void getSubjects(){
+        quizzes.clear();
+
         final String year = SharedPrefManager.getInstance(getApplicationContext()).getUserYear();
         final String branch = SharedPrefManager.getInstance(getApplicationContext()).getUserBranch();
+        final String sub = subject;
 
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_GET_SUBJECTS,
+                Constants.URL_GET_QUIZ_NAMES,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
                             JSONArray jsonArray = new JSONArray(response);
+                            Log.d("dataValues", jsonArray.toString());
                             if(!jsonArray.getBoolean(1)){
                                 for(int i = 2; i < jsonArray.getInt(0) + 2; i++){
-                                    subjects.add(jsonArray.getString(i));
+                                    quizzes.add(jsonArray.getString(i));
                                 }
                                 ArrayAdapter<String> adapter =
-                                        new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, subjects);
+                                        new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, quizzes);
                                 adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-                                spinner.setAdapter(adapter);
-                                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                spinner1.setAdapter(adapter);
+                                spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
-                                        subject = subjects.get(position);
+                                        Toast.makeText(getApplicationContext(), quizzes.get(position), Toast.LENGTH_LONG).show();
+                                        quiz = quizzes.get(position);
+                                        openNext();
                                     }
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
@@ -114,10 +120,18 @@ public class SelectQuizActivity extends AppCompatActivity{
                 Map<String,String> params = new HashMap<>();
                 params.put("year", year);
                 params.put("branch", branch);
+                params.put("subject", sub);
                 return params;
             }
         };
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+
+    }
+
+    private void openNext() {
+        Intent intent = new Intent(this, ScoresActivity.class);
+        intent.putExtra("quiz_name", quiz);
+        startActivity(intent);
     }
 
 

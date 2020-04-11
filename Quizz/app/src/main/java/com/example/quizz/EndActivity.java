@@ -47,6 +47,9 @@ public class EndActivity extends AppCompatActivity {
         Roll_no = intent.getStringExtra("Roll_no");
         quiz_name = intent.getStringExtra("quiz_name");
 
+        Log.d("Test", "Test4 passed");
+
+
         Log.d("ROOLLLL",Roll_no);
 
         finalscore.setText(score);
@@ -113,7 +116,7 @@ public class EndActivity extends AppCompatActivity {
     }
 
     public void openFirstActivity(){
-        Intent intent= new Intent(this, FirstActivity.class);
+        Intent intent= new Intent(this, StudentChooseActivity.class);
         startActivity(intent);
     }
 }
