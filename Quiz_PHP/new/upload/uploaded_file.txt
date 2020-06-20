@@ -1,0 +1,10 @@
+1,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+2,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+3,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+4,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+5,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+6,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+7,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+8,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+9,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
+10,Whats the capital of India?,Delhi,Mumbai,Kolkata,Chennai,Delhi,No
